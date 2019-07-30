@@ -12,12 +12,12 @@ class DropConnectDense(Dense):
     def call(self, x, mask=None):
         if 0. < self.prob < 1.:
             self.kernel = K.in_train_phase(K.dropout(self.kernel, self.prob), self.kernel)
-            self.b = K.in_train_phase(K.dropout(self.b, self.prob), self.b)
+            self.bias = K.in_train_phase(K.dropout(self.bias, self.prob), self.bias)
 
         # Same as original
-        output = K.dot(x, self.W)
-        if self.bias:
-            output += self.b
+        output = K.dot(x, self.kernel)
+        if self.bias is not None:
+            output += self.bias
         return self.activation(output)
 
 
